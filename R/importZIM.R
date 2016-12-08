@@ -1,8 +1,8 @@
-#' Import function for YARA ZIM Plant technology ZIM sensor files that extracts sensor ID information
+#' Import function for YARA ZIM Plant technology ZIM sensor files that extracts sensor ID information, and re-organises the temperature and humidity data
 #'
-#' @description Imports ZIM water sensor files that extracts sensor ID information from sensor names. See http://yara.zim-plant-technology.com/ for the actual sensors.
+#' @description Imports ZIM water sensor files that extracts sensor ID information from sensor names. Merges Pp data with humidity and temperature. See http://yara.zim-plant-technology.com/ for the actual sensors.
 #' @param file The name of the file to be imported. Character string.
-#' @return Returns a data frame 
+#' @return Returns a data frame.
 #' @examples
 #' \dontrun{
 #' df <- importZIM(file)
@@ -90,9 +90,34 @@ names(df.melt) <- gsub("Timestamp\\.\\.in\\.Local\\.time", "Timestamp", names(df
 df.melt$Timestamp <- as.POSIXct(df.melt$Timestamp)
 
 # merge with extracted sensor information
-
 zim <- merge(the.names, df.melt,
 	     by.x = "Name",
 	     by.y = "variable")
-return(zim)
+
+# convert some elements to factors
+to.factor <- c("Name", "Sensortype", "SensorID", "Unit", "Transmitter", "Port", "Site")
+zim[, to.factor] <- lapply(zim[, to.factor], as.factor)
+
+# move humidity and temperature to separate vectors, to allow merge per timestamp
+met <- zim[zim$Sensortype == "Humidity" |
+           zim$Sensortype == "Temperature", ]
+
+to.keep <- c("Timestamp", "Sensortype", "Unit", "value")
+met <- met[, to.keep]
+
+# reshape the data frame to be able to merge with zim
+met.cast <- reshape2::dcast(met, Timestamp ~ Sensortype + Unit)
+
+# combine zim with met.cast
+# first, remove Humidity and Temperature from zim
+zim.nomet <- zim[zim$Sensortype == "Yara.Water.Sensor",]
+
+# merge
+zim.met <- merge(zim.nomet, met.cast)
+
+# rename the sensor, get rid of Unit, as it's now redundant
+names(zim.met) <- gsub("value", "Pp_kPa", names(zim.met))
+zim.met$Unit <- NULL
+
+return(zim.met)
 }

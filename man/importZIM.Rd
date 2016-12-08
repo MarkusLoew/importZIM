@@ -2,7 +2,7 @@
 % Please edit documentation in R/importZIM.R
 \name{importZIM}
 \alias{importZIM}
-\title{Import function for YARA ZIM Plant technology ZIM sensor files that extracts sensor ID information}
+\title{Import function for YARA ZIM Plant technology ZIM sensor files that extracts sensor ID information, and re-organises the temperature and humidity data}
 \usage{
 importZIM(file)
 }
@@ -10,10 +10,10 @@ importZIM(file)
 \item{file}{The name of the file to be imported. Character string.}
 }
 \value{
-Returns a data frame
+Returns a data frame.
 }
 \description{
-Imports ZIM water sensor files that extracts sensor ID information from sensor names. See http://yara.zim-plant-technology.com/ for the actual sensors.
+Imports ZIM water sensor files that extracts sensor ID information from sensor names. Merges Pp data with humidity and temperature. See http://yara.zim-plant-technology.com/ for the actual sensors.
 }
 \examples{
 \dontrun{

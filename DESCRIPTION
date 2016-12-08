@@ -1,11 +1,10 @@
 Package: importZIM
 Title: Imports YARA ZIM Plant technology ZIM sensor files, extracts sensor ID
     information
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: person("Markus", "Loew", email = "m.loew@unimelb.edu.au", role = c("aut", "cre"))
 Description: Imports ZIM water sensor files that extracts sensor ID information
-    from sensor names. See http://yara.zim-plant-technology.com/ for the actual
-    sensors.
+    from sensor names, re-organises the temperature and humidity data. See http://yara.zim-plant-technology.com/ for the actual sensors.
 Depends:
     R (>= 3.0.0)
 License: GPL-2
