@@ -3,6 +3,10 @@
 #' @description Imports ZIM water sensor files that extracts sensor ID information from sensor names. See http://yara.zim-plant-technology.com/ for the actual sensors.
 #' @param file The name of the file to be imported. Character string.
 #' @return Returns a data frame 
+#' @examples
+#' \dontrun{
+#' df <- importZIM(file)
+#' }
 #' @export
 
 importZIM <- function(file) {
@@ -82,6 +86,8 @@ the.names$Site        <- sensor.site
 # reshape the data
 df.melt <- reshape2::melt(df, id.vars = "Timestamp..in.Local.time")
 names(df.melt) <- gsub("Timestamp\\.\\.in\\.Local\\.time", "Timestamp", names(df.melt))
+
+df.melt$Timestamp <- as.POSIXct(df.melt$Timestamp)
 
 # merge with extracted sensor information
 

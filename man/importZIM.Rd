@@ -15,4 +15,9 @@ Returns a data frame
 \description{
 Imports ZIM water sensor files that extracts sensor ID information from sensor names. See http://yara.zim-plant-technology.com/ for the actual sensors.
 }
+\examples{
+\dontrun{
+df <- importZIM(file)
+}
+}
 
